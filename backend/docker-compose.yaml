@@ -9,8 +9,16 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
     ports:
       - "3306:3306"
-#     volumes:
-#       - mysql_data:/var/lib/mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
-# volumes:
-#   mysql_data:
+volumes:
+  mysql_data:
+  mongo_data:

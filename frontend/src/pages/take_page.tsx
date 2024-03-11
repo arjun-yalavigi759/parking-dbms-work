@@ -27,7 +27,7 @@ function TakePage() {
         const data = await res.json()
         const duration = Math.floor(data.durationInSeconds)
 
-        navigate(`/bill/${duration}`)
+        navigate(`/bill/${phone}/${duration}`)
     }
 
     return(

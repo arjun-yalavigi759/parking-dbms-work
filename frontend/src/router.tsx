@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
         element: <TakePage />,
     },
     {
-        path: RouteNames.BILL + "/:duration",
+        path: RouteNames.BILL + "/:userPhone" + "/:duration",
         element: <BillPage />,
     }
 ]);

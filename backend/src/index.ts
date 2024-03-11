@@ -4,8 +4,23 @@ import { db } from './db/connection'
 import { occupies, parkingLot, parkingSlot, users, vehicle } from './db/schema'
 import { cors } from 'hono/cors'
 import { and, eq, notInArray } from 'drizzle-orm'
+import { MongoClient } from 'mongodb'
 
 const app = new Hono()
+
+const uri = 'mongodb://localhost:27017';
+
+const client = new MongoClient(uri);
+
+client.connect().then(() => {
+  console.log('Connected to MongoDB')
+}).catch((e) => {
+  console.error(e)
+})
+
+const mongoDB = client.db('parking')
+
+const feedbackCollection = mongoDB.collection('feedback')
 
 app.use('/*', cors())
 
@@ -106,11 +121,27 @@ app.post("/take", async (ctx) => {
 
     ctx.status(200)
 
-    return ctx.json({ 
+    return ctx.json({
       message: "Vehicle taken successfully",
       durationInSeconds: seconds
     })
 
+  } catch (e) {
+    console.error(e)
+  }
+})
+
+app.post("/feedback", async (ctx) => {
+  try {
+    const body = await ctx.req.json()
+
+    await feedbackCollection.insertOne({
+      phone: body.phone,
+      rating: body.rating,
+      feedback: body.feedback
+    })
+
+    return ctx.json({ message: "Feedback submitted successfully" })
   } catch (e) {
     console.error(e)
   }
